@@ -1,0 +1,230 @@
+version: '3.6'
+services:
+
+    eureka:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "eureka:0.9.1"
+        ports:
+          - 38180:8080
+        restart: always
+        volumes:
+        - eureka_logs:/opt/eureka/logs
+
+
+    linkis-gateway:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-gateway:0.9.1"
+        ports:
+          - 38181:8080
+        restart: always
+        volumes:
+        - linkis-gateway_logs:/opt/linkis-gateway/logs
+
+
+    linkis-metadata:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-metadata:0.9.1"
+        ports:
+          - 38182:8080
+        restart: always
+        volumes:
+        - linkis-metadata_logs:/opt/linkis-metadata/logs
+
+
+    linkis-ujes-pipeline-entrance:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-pipeline-entrance:0.9.1"
+        ports:
+          - 38183:8080
+        restart: always
+        volumes:
+        - linkis-ujes-pipeline-entrance_logs:/opt/linkis-ujes-pipeline-entrance/logs
+
+
+    linkis-ujes-pipeline-enginemanager:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-pipeline-enginemanager:0.9.1"
+        ports:
+          - 38184:8080
+        restart: always
+        volumes:
+        - linkis-ujes-pipeline-enginemanager_logs:/opt/linkis-ujes-pipeline-enginemanager/logs
+
+
+    linkis-ujes-mlsql-entrance:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-mlsql-entrance:0.9.1"
+        ports:
+          - 38185:8080
+        restart: always
+        volumes:
+        - linkis-ujes-mlsql-entrance_logs:/opt/linkis-ujes-mlsql-entrance/logs
+
+
+    linkis-ujes-python-entrance:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-python-entrance:0.9.1"
+        ports:
+          - 38186:8080
+        restart: always
+        volumes:
+        - linkis-ujes-python-entrance_logs:/opt/linkis-ujes-python-entrance/logs
+
+
+    linkis-ujes-python-enginemanager:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-python-enginemanager:0.9.1"
+        ports:
+          - 38187:8080
+        restart: always
+        volumes:
+        - linkis-ujes-python-enginemanager_logs:/opt/linkis-ujes-python-enginemanager/logs
+
+
+    linkis-ujes-jdbc-entrance:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-jdbc-entrance:0.9.1"
+        ports:
+          - 38188:8080
+        restart: always
+        volumes:
+        - linkis-ujes-jdbc-entrance_logs:/opt/linkis-ujes-jdbc-entrance/logs
+
+
+    linkis-ujes-hive-entrance:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-hive-entrance:0.9.1"
+        ports:
+          - 38189:8080
+        restart: always
+        volumes:
+        - linkis-ujes-hive-entrance_logs:/opt/linkis-ujes-hive-entrance/logs
+
+
+    linkis-ujes-hive-enginemanager:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-hive-enginemanager:0.9.1"
+        ports:
+          - 38190:8080
+        restart: always
+        volumes:
+        - linkis-ujes-hive-enginemanager_logs:/opt/linkis-ujes-hive-enginemanager/logs
+
+
+    linkis-ujes-spark-enginemanager:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-spark-enginemanager:0.9.1"
+        ports:
+          - 38191:8080
+        restart: always
+        volumes:
+        - linkis-ujes-spark-enginemanager_logs:/opt/linkis-ujes-spark-enginemanager/logs
+
+
+    linkis-ujes-spark-entrance:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-ujes-spark-entrance:0.9.1"
+        ports:
+          - 38192:8080
+        restart: always
+        volumes:
+        - linkis-ujes-spark-entrance_logs:/opt/linkis-ujes-spark-entrance/logs
+
+
+    linkis-publicservice:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-publicservice:0.9.1"
+        ports:
+          - 38193:8080
+        restart: always
+        volumes:
+        - linkis-publicservice_logs:/opt/linkis-publicservice/logs
+
+
+    linkis-resourcemanager:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-resourcemanager:0.9.1"
+        ports:
+          - 38194:8080
+        restart: always
+        volumes:
+        - linkis-resourcemanager_logs:/opt/linkis-resourcemanager/logs
+
+
+    linkis-bml:
+        environment:
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVER_PORT=8080
+          - SERVER_HOSTNAME=0.0.0.0
+        image: "linkis-bml:0.9.1"
+        ports:
+          - 38195:8080
+        restart: always
+        volumes:
+        - linkis-bml_logs:/opt/linkis-bml/logs
+
+
+volumes:
+    linkis-bml_logs:
+    linkis-resourcemanager_logs:
+    linkis-publicservice_logs:
+    linkis-ujes-spark-entrance_logs:
+    linkis-ujes-spark-enginemanager_logs:
+    linkis-ujes-hive-enginemanager_logs:
+    linkis-ujes-hive-entrance_logs:
+    linkis-ujes-jdbc-entrance_logs:
+    linkis-ujes-python-enginemanager_logs:
+    linkis-ujes-python-entrance_logs:
+    linkis-ujes-mlsql-entrance_logs:
+    linkis-ujes-pipeline-enginemanager_logs:
+    linkis-ujes-pipeline-entrance_logs:
+    linkis-metadata_logs:
+    linkis-gateway_logs:
+    eureka_logs:
+    
+

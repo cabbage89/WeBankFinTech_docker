@@ -1,0 +1,54 @@
+version: '3.6'
+services:
+  DataSphereStudio:
+    environment:
+      - SERVER_ADDRESS=0.0.0.0
+    image: "edp963/davinci:v0.3.0-beta.8"
+    ports:
+      - 58080:8080
+    command: ["./bin/docker-entrypoint.sh", "mysql:3306", "--", "start-server.sh"]
+    restart: always
+    volumes:
+      - davinci_logs:/opt/davinci/logs
+  Scriptis:
+    environment:
+      - LINKIS_URL=http://Linkis
+    image: "webankfintech/scriptis:v0.7.0"
+    ports:
+      - 36080:8080
+    restart: always
+  Qualitis:
+    environment:
+      - SERVER_ADDRESS=0.0.0.0
+    image: "edp963/davinci:v0.3.0-beta.8"
+    ports:
+      - 58080:8080
+    command: ["./bin/docker-entrypoint.sh", "mysql:3306", "--", "start-server.sh"]
+    restart: always
+    volumes:
+      - davinci_logs:/opt/davinci/logs
+  Linkis:
+    environment:
+      - SERVER_ADDRESS=0.0.0.0
+    image: "edp963/davinci:v0.3.0-beta.8"
+    ports:
+      - 58080:8080
+    command: ["./bin/docker-entrypoint.sh", "mysql:3306", "--", "start-server.sh"]
+    restart: always
+    volumes:
+      - davinci_logs:/opt/davinci/logs
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=abc123123
+      - MYSQL_DATABASE=davinci0.3
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - davinci_initdb:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  davinci_userfiles:
+  davinci_logs:
+  davinci_initdb:
+  mysql_data:
