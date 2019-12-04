@@ -3,7 +3,9 @@ bootscript=$(find bin -iname "start-*.sh")
 echo "发现启动脚本:$bootscript,执行中..."
 
 line_nohup=$(cat $bootscript |grep -n nohup| cut -d ":" -f 1)
-sed -i "${line_nohup}aexport" $bootscript
+sed -i "${line_nohup}i\export" $bootscript
+
+sed -i "s/\/lib\/\*/\/lib\/\*:\/opt\/module\/lib\/\*/g"  $bootscript
 
 echo "
 sleep 2s

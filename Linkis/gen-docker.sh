@@ -13,11 +13,15 @@ module=$(find wedatasphere-linkis-0.9.1-dist-spark2.0-2.2 -iname 'module.zip')
 echo "FROM openjdk:8u232-jdk 
 ADD $module /module.zip
 
+ENV CLASSPATH=\"\$CLASSPATH:/opt/module/lib\"
+
 RUN mkdir -p /opt \
 && unzip module.zip -d /opt \
-&& rm -rf module.zip" > Dockerfile
+&& rm -rf module.zip
 
-#docker build -t="linkis-lib-base:$LINKIS_VERSION" .
+" > Dockerfile
+
+docker build -t="linkis-lib-base:$LINKIS_VERSION" .
 
 ### 制作linkis各服务镜像
 
@@ -27,14 +31,19 @@ do
     name=${filename%%.*}
     mkdir -p $name
 
-    echo "FROM linkis-lib-base:$LINKIS_VERSION
+if [ $name = 'eureka' ]
+then
+    echo "FROM openjdk:8u232-jdk"> $name/Dockerfile
+else
+    echo "FROM linkis-lib-base:$LINKIS_VERSION"> $name/Dockerfile
+fi
+    echo "
+ENV APP_DIR=$name
 ADD $file /$filename
 
 RUN mkdir -p /opt \
 && unzip /$filename -d /opt \
-&& rm -rf /$filename \
-&& cp -frp /opt/module/lib/* /opt/$name/lib/ \
-&& rm -rf /opt/module
+&& rm -rf /$filename
 
 ADD docker-entrypoint.sh /opt/$name/
 
@@ -47,7 +56,7 @@ RUN find . -maxdepth 3
 EXPOSE 8080
 
 ENTRYPOINT [\"sh\",\"./docker-entrypoint.sh\"]
-" > $name/Dockerfile
+" >> $name/Dockerfile
 
 echo "
     $name:
@@ -59,7 +68,7 @@ echo "
           - SPARK_HOME=/host$SPARK_HOME
           - SPARK_CONF_DIR=/host$SPARK_CONF_DIR
           - PYSPARK_ALLOW_INSECURE_GATEWAY=\$PYSPARK_ALLOW_INSECURE_GATEWAY
-          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080/eureka/
+          - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eureka:8080/eureka/
           - SERVER_PORT=8080
           - SERVER_HOSTNAME=0.0.0.0
           - WDS_LINKIS_LDAP_PROXY_URL=\$WDS_LINKIS_LDAP_PROXY_URL
