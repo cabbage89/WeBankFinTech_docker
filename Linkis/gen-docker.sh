@@ -30,10 +30,15 @@ do
     echo "FROM linkis-lib-base:$LINKIS_VERSION
 ADD $file /$filename
 
-RUN mkdir -p /opt && \
-unzip /$filename -d /opt \
+RUN mkdir -p /opt \
+&& unzip /$filename -d /opt \
 && rm -rf /$filename \
-&& mv -f /opt/module/lib/ /opt/$name/lib/module
+&& cp -frp /opt/module/lib/* /opt/$name/lib/ \
+&& rm -rf /opt/module
+
+ADD docker-entrypoint.sh /opt/$name/
+
+RUN chmod 700 /opt/$name/docker-entrypoint.sh
 
 WORKDIR /opt/$name
 
@@ -41,20 +46,20 @@ RUN find . -maxdepth 3
 
 EXPOSE 8080
 
-ENTRYPOINT [\"sh\",\"./bin/\$(ls bin|grep start)\"]
+ENTRYPOINT [\"sh\",\"./docker-entrypoint.sh\"]
 " > $name/Dockerfile
 
 echo "
     $name:
         environment:
-          - HADOOP_HOME=\$HADOOP_HOME
-          - HADOOP_CONF_DIR=\$HADOOP_CONF_DIR
-          - HIVE_HOME=\$HIVE_HOME
-          - HIVE_CONF_DIR=\$HIVE_CONF_DIR
-          - SPARK_HOME=\$SPARK_HOME
-          - SPARK_CONF_DIR=\$SPARK_CONF_DIR
+          - HADOOP_HOME=/host$HADOOP_HOME
+          - HADOOP_CONF_DIR=/host$HADOOP_CONF_DIR
+          - HIVE_HOME=/host$HIVE_HOME
+          - HIVE_CONF_DIR=/host$HIVE_CONF_DIR
+          - SPARK_HOME=/host$SPARK_HOME
+          - SPARK_CONF_DIR=/host$SPARK_CONF_DIR
           - PYSPARK_ALLOW_INSECURE_GATEWAY=\$PYSPARK_ALLOW_INSECURE_GATEWAY
-          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080
+          - SERVICE_URL_DEFAULT_ZONE=http://eureka:8080/eureka/
           - SERVER_PORT=8080
           - SERVER_HOSTNAME=0.0.0.0
           - WDS_LINKIS_LDAP_PROXY_URL=\$WDS_LINKIS_LDAP_PROXY_URL
@@ -67,7 +72,6 @@ echo "
           - WDS_LINKIS_WORKSPACE_FILESYSTEM_HDFSUSERROOTPATH_PREFIX=\$HDFS_USER_ROOT_PATH
           - WDS_LINKIS_ENGINEMANAGER_SUDO_SCRIPT=/opt/$name/bin/rootScript.sh
           - WDS_LINKIS_ENTRANCE_CONFIG_LOGPATH=file:///opt/$name/tmp/
-          - WDS_LINKIS_RESULTSET_STORE_PATH=\$RESULT_SET_ROOT_PATH
           - HIVE_META_URL=\$HIVE_META_URL
           - HIVE_META_USER=\$HIVE_META_USER
           - HIVE_META_PASSWORD=\$HIVE_META_PASSWORD
@@ -81,12 +85,8 @@ echo "
         volumes:
         - ${name}_logs:/opt/$name/logs
         - ${name}_tmp:/opt/$name/tmp
-        - $HADOOP_HOME:$HADOOP_HOME
-        - $HADOOP_CONF_DIR:$HADOOP_CONF_DIR
-        - $HIVE_HOME:$HIVE_HOME
-        - $HIVE_CONF_DIR:$HIVE_CONF_DIR
-        - $SPARK_HOME:$SPARK_HOME
-        - $SPARK_CONF_DIR:$SPARK_CONF_DIR
+        - ./docker-entrypoint.sh:/opt/$name/bin/docker-entrypoint.sh
+        - /:/host
 " >> docker-compose.yaml
 
 ((port_begin++))
@@ -96,7 +96,7 @@ volumes="${name}_logs:
     $volumes"
 
 echo 'docker build -t="'$name':'$LINKIS_VERSION'" -f '$name'/Dockerfile .'
-#docker build -t="$name:$LINKIS_VERSION" -f $name/Dockerfile .
+docker build -t="$name:$LINKIS_VERSION" -f $name/Dockerfile .
 
 done
 
@@ -111,7 +111,7 @@ echo "
         - 53306:3306
       volumes:
         - mysql_data:/var/lib/mysql
-        - initdb:/docker-entrypoint-initdb.d:ro
+        - ./wedatasphere-linkis-0.9.1-dist-spark2.0-2.2/db:/docker-entrypoint-initdb.d:ro
 volumes:
     mysql_data:
     $volumes
