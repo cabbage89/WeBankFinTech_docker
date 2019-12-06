@@ -1,5 +1,7 @@
 使用方法：
 
+将[wedatasphere-linkis-0.9.1-dist-spark2.4.x.tar.gz](https://github.com/WeBankFinTech/Linkis/releases/download/0.9.1/wedatasphere-linkis-0.9.1-dist-spark2.4.x.tar.gz) 解压至当前目录
+
 1. 修改.env中的环境变量
 
 2. 执行gen-docker.sh生成Docker镜像与docker-compose.yml
